@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -16,9 +19,11 @@ public class GameManager : MonoBehaviour
     public EndGame endUI;
 
     public int ghostMultiply { get; private set; } = 1;
-    
-    public int score { get; private set;  }
-    public int lives { get; private set;  }
+
+    public int score { get; private set; }
+    public int lives { get; private set; }
+
+    private string uri = "https://backend-aqzm.onrender.com/score/post";
 
     private void Start()
     {
@@ -32,7 +37,7 @@ public class GameManager : MonoBehaviour
              NewGame();
          }*/
         endUI.retry.onClick.AddListener(() => NewGame());
-         }
+    }
 
     private void NewGame()
     {
@@ -41,12 +46,11 @@ public class GameManager : MonoBehaviour
         NewRound();
         this.lifes.ResetState();
         endUI.ResetState();
-
     }
 
     private void NewRound()
     {
-        foreach(Transform pellet in this.pellets)
+        foreach (Transform pellet in this.pellets)
         {
             pellet.gameObject.SetActive(true);
         }
@@ -64,8 +68,20 @@ public class GameManager : MonoBehaviour
         this.pacman.ResetState();
     }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern IntPtr GetLocalStorageValue();
+#endif
+
     private void GameOver()
     {
+        string token = "SetInBrowser";
+#if UNITY_WEBGL && !UNITY_EDITOR
+        IntPtr ptr = GetLocalStorageValue();
+        token = Marshal.PtrToStringUTF8(ptr);
+#endif
+        StartCoroutine(PostScoreToEndpoint(uri, score, 1, token));
+
         endUI.Enable();
         lifes.HideScore();
 
@@ -75,8 +91,8 @@ public class GameManager : MonoBehaviour
         }
 
         this.pacman.gameObject.SetActive(false);
-
     }
+
     private void SetScore(int score)
     {
         this.score = score;
@@ -118,12 +134,10 @@ public class GameManager : MonoBehaviour
             this.pacman.gameObject.SetActive(false);
             Invoke(nameof(NewRound), 3.0f);
         }
-
     }
 
     public void PowerPelletEaten(PowerPellet pellet)
     {
-
         for (int i = 0; i < this.ghosts.Length; i++)
         {
             this.ghosts[i].frightened.Enable(pellet.duration);
@@ -132,7 +146,6 @@ public class GameManager : MonoBehaviour
         CancelInvoke();
         PelletEaten(pellet);
     }
-
 
     private bool HasRemainingPellets()
     {
@@ -149,5 +162,40 @@ public class GameManager : MonoBehaviour
     private void ResetGhostMultiply()
     {
         this.ghostMultiply = 1;
+    }
+
+    IEnumerator PostScoreToEndpoint(string uri, int score, int gameId, string accountIdToken)
+    {
+        ScoreData scoreData = new();
+        scoreData.score = score;
+        scoreData.gameId = gameId;
+        string json = JsonUtility.ToJson(scoreData);
+
+        var req = new UnityWebRequest(uri, "POST");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+        req.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+
+        req.SetRequestHeader("Authorization", "Bearer " + accountIdToken);
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        //Send the request then wait here until it returns
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.ConnectionError)
+        {
+            Debug.Log("Error:" + req.error);
+        }
+        else
+        {
+            Debug.Log("Received: " + req.downloadHandler.text);
+        }
+    }
+
+    [System.Serializable]
+    private class ScoreData
+    {
+        public int score;
+        public int gameId;
     }
 }
