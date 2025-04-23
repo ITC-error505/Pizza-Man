@@ -1,0 +1,21 @@
+body {
+    text-align: center; 
+    padding: 0; 
+    border: 0; 
+    margin: 0; 
+    background-color: #281A34; 
+    display: grid;
+    align-items: center;
+    justify-content:center;
+
+    /*background: url(BuildFolder/pizzaBackground.png);*/
+}
+
+#unity-canvas {
+    width: calc(100vw - 25px*2); 
+    height: calc(100vw - 25px*2);
+    background: #281A34; 
+    border: 5px solid #FF3B7F; 
+    border-radius: 20px; 
+    margin-top: 60px;
+}
