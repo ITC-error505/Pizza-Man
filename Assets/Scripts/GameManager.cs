@@ -15,8 +15,12 @@ public class GameManager : MonoBehaviour
     public Transform pellets;
 
     public ScoreManager lifes;
+    public AudioManager sounds;
 
-    public EndGame endUI;
+    public Canvas endUI;
+    public Canvas startUI;
+    public Button start;
+    public Button retry;
 
     public int ghostMultiply { get; private set; } = 1;
 
@@ -27,7 +31,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        NewGame();
+        // NewGame();
+        startUI.gameObject.SetActive(true);
+        DisableAll();
+
     }
 
     private void Update()
@@ -36,7 +43,8 @@ public class GameManager : MonoBehaviour
          {
              NewGame();
          }*/
-        endUI.retry.onClick.AddListener(() => NewGame());
+        start.onClick.AddListener(() => NewGame());
+        retry.onClick.AddListener(() => NewGame());
     }
 
     private void NewGame()
@@ -45,7 +53,8 @@ public class GameManager : MonoBehaviour
         SetLives(3);
         NewRound();
         this.lifes.ResetState();
-        endUI.ResetState();
+        ResetUI();
+        sounds.switchBackground();
     }
 
     private void NewRound()
@@ -82,7 +91,7 @@ public class GameManager : MonoBehaviour
 #endif
         StartCoroutine(PostScoreToEndpoint(uri, score, 1, token));
 
-        endUI.Enable();
+        endUI.gameObject.SetActive(true);
         lifes.HideScore();
 
         for (int i = 0; i < this.ghosts.Length; i++)
@@ -107,13 +116,17 @@ public class GameManager : MonoBehaviour
     {
         SetScore(this.score + (ghost.points * this.ghostMultiply));
         this.ghostMultiply++;
+        sounds.EatGhost();
     }
 
     public void PacmanEaten()
     {
+        sounds.PacmanEat();
         this.pacman.gameObject.SetActive(false);
 
         SetLives(this.lives - 1);
+       
+
         if (this.lives > 0)
         {
             Invoke(nameof(ResetState), 3.0f);
@@ -128,6 +141,7 @@ public class GameManager : MonoBehaviour
     {
         pellet.gameObject.SetActive(false);
         SetScore(this.score + pellet.points);
+        sounds.EatPellet();
 
         if (!HasRemainingPellets())
         {
@@ -138,6 +152,8 @@ public class GameManager : MonoBehaviour
 
     public void PowerPelletEaten(PowerPellet pellet)
     {
+        sounds.EatPowerPellet();
+
         for (int i = 0; i < this.ghosts.Length; i++)
         {
             this.ghosts[i].frightened.Enable(pellet.duration);
@@ -197,5 +213,22 @@ public class GameManager : MonoBehaviour
     {
         public int score;
         public int gameId;
+    }
+
+    private void ResetUI()
+    {
+        endUI.gameObject.SetActive(false);
+        startUI.gameObject.SetActive(false);
+    }
+
+    private void DisableAll()
+    {
+        for (int i = 0; i < this.ghosts.Length; i++)
+        {
+            this.ghosts[i].gameObject.SetActive(false);
+        }
+
+        this.pacman.gameObject.SetActive(false);
+
     }
 }
