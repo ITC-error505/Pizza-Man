@@ -8,7 +8,7 @@ public class OpenURLHandler : MonoBehaviour
     private void OnMouseDown()
     {
 #if !UNITY_EDITOR
-        openUrl(url);
+                Application.ExternalEval("window.open('" + url + "','_self')");
 #endif
     }
 
