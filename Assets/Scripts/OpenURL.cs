@@ -10,7 +10,7 @@ public class OpenURL : MonoBehaviour
     public void Open()
     {
 
-        Application.OpenURL(url);
+        Application.ExternalEval("window.open('" + url + "','_self')");
     }
 
 }
