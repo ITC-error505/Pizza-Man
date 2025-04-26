@@ -44,22 +44,22 @@ public class Pacman : MonoBehaviour
         this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
     }
 
-    public void OnUpPressed(BaseEventData data)
+    public void OnUpPressed()
     {
         this.movement.SetDirection(Vector2.up);
     }
 
-    public void OnDownPressed(BaseEventData data)
+    public void OnDownPressed()
     {
         this.movement.SetDirection(Vector2.down);
     }
 
-    public void OnLeftPressed(BaseEventData data)
+    public void OnLeftPressed()
     {
         this.movement.SetDirection(Vector2.left);
     }
 
-    public void OnRightPressed(BaseEventData data)
+    public void OnRightPressed()
     {
         this.movement.SetDirection(Vector2.right);
     }

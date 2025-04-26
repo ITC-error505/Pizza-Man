@@ -3526,7 +3526,7 @@ MonoBehaviour:
         - m_Target: {fileID: 1840769790}
           m_TargetAssemblyTypeName: Pacman, Assembly-CSharp
           m_MethodName: OnUpPressed
-          m_Mode: 0
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9666,7 +9666,7 @@ MonoBehaviour:
         - m_Target: {fileID: 1840769790}
           m_TargetAssemblyTypeName: Pacman, Assembly-CSharp
           m_MethodName: OnRightPressed
-          m_Mode: 0
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10668,7 +10668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b60bffad7ad10240a5b01f275bff8d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 0}
+  movement: {fileID: 1840769789}
   up: {fileID: 1458460934}
   down: {fileID: 1910680631}
   left: {fileID: 2023140121}
@@ -10986,7 +10986,7 @@ MonoBehaviour:
         - m_Target: {fileID: 1840769790}
           m_TargetAssemblyTypeName: Pacman, Assembly-CSharp
           m_MethodName: OnDownPressed
-          m_Mode: 0
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -14190,7 +14190,7 @@ MonoBehaviour:
         - m_Target: {fileID: 1840769790}
           m_TargetAssemblyTypeName: Pacman, Assembly-CSharp
           m_MethodName: OnLeftPressed
-          m_Mode: 0
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

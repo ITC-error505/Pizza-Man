@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
         this.lifes.ResetState();
         ResetUI();
         sounds.switchBackground();
+        sounds.OnMusic();
+
     }
 
     private void NewRound()
@@ -100,6 +102,7 @@ public class GameManager : MonoBehaviour
         }
 
         this.pacman.gameObject.SetActive(false);
+        sounds.OffMusic();
     }
 
     private void SetScore(int score)
